@@ -25,7 +25,7 @@ export const Footer = () => {
         </Link>
         <div className="footer__links">
           <Link
-            to="https://github.com/artemvlasiuk/react_phone-catalog"
+            to="https://github.com/artemvlasiuk/phone-catalog"
             className="footer__link-item"
             target="_blank"
             rel="noopener noreferrer"
