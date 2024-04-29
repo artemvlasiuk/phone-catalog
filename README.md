@@ -13,6 +13,7 @@ This project is a web gadget catalog application developed using React with Type
 ***
 ### Technologies:
 * React: Leveraging the React library to create interactive interfaces.
+* Redux Toolkit: Managing application state using Redux Toolkit for efficient and scalable state management.
 * TypeScript: Applying TypeScript for enhanced stability, type support, and increased productivity.
 * SCSS (Sass): Utilizing SCSS for styling to maintain scalable and maintainable CSS code.
 ***
