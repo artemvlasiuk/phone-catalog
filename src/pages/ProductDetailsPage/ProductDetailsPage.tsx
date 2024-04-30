@@ -1,6 +1,6 @@
 import './ProductDetailsPage.scss';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   findProductByItemId,
   getAllProducts,
@@ -74,6 +74,29 @@ export const ProductDetailsPage = () => {
     }
   };
 
+  const handleSwitchProduct = useCallback(() => {
+    if (selectedColor && selectedCapacity) {
+      const itemIdParts = itemId?.split('-');
+
+      if (!itemIdParts) {
+        return;
+      }
+
+      itemIdParts[itemIdParts.length - 2] = selectedCapacity.toLowerCase();
+      itemIdParts[itemIdParts.length - 1] = selectedColor;
+
+      const newProductId = itemIdParts.join('-');
+
+      if (newProductId !== undefined) {
+        if (!category) {
+          return;
+        }
+
+        navigate(`/${category}/${newProductId}`);
+      }
+    }
+  }, [selectedColor, selectedCapacity, itemId, category, navigate]);
+
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
@@ -88,6 +111,10 @@ export const ProductDetailsPage = () => {
 
     fetchProduct();
   }, [itemId, category]);
+
+  useEffect(() => {
+    handleSwitchProduct();
+  }, [selectedColor, selectedCapacity, handleSwitchProduct]);
 
   useEffect(() => {
     if (product) {
@@ -109,8 +136,8 @@ export const ProductDetailsPage = () => {
   }, [product]);
 
   useEffect(() => {
-    if (product?.capacityAvailable.length) {
-      setSelectedCapacity(product.capacityAvailable[0]);
+    if (product) {
+      setSelectedCapacity(product.capacity);
     }
   }, [product]);
 
@@ -133,7 +160,7 @@ export const ProductDetailsPage = () => {
       <Breadcrumbs category={product?.category || ''} product={product?.name} />
       <div className="back">
         <div className="back__arrow"></div>
-        <button className="back__btn" onClick={() => navigate(-1)}>
+        <button className="back__btn" onClick={() => navigate(`/${category}`)}>
           Back
         </button>
       </div>
@@ -183,7 +210,9 @@ export const ProductDetailsPage = () => {
               <div className="product-details__capacity-selector">
                 {product?.capacityAvailable.map(capacity => (
                   <div
-                    onClick={() => setSelectedCapacity(capacity)}
+                    onClick={() => {
+                      setSelectedCapacity(capacity);
+                    }}
                     className={
                       capacity === selectedCapacity
                         ? 'product-details__capacity-select--selected'
