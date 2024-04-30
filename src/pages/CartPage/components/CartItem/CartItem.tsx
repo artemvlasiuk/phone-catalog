@@ -7,13 +7,14 @@ import {
   decreaseQuantity,
   increaseQuantity,
 } from '../../../../features/cartSlice';
+import { NavLink } from 'react-router-dom';
 
 interface CartItemProps {
   cartItem: Product;
 }
 
 export const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
-  const { name, image, price, itemId } = cartItem;
+  const { name, image, price, itemId, category } = cartItem;
   const dispatch = useAppDispatch();
   const quantity = useAppSelector(state => state.cart.quantities[itemId]);
 
@@ -27,7 +28,9 @@ export const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
         <div className="cart-item__img">
           <img src={image} alt="Product Image" />
         </div>
-        <div className="cart-item__name">{name}</div>
+        <NavLink to={`/${category}/${itemId}`} className="cart-item__name">
+          {name}
+        </NavLink>
       </div>
       <div className="cart-item__actions">
         <div className="cart-item__quantity">

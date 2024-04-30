@@ -20,6 +20,7 @@ import {
   addToFavorites,
   removeFromFavorites,
 } from '../../features/favoritesSlice';
+import { colorMapping } from './utils';
 
 export const ProductDetailsPage = () => {
   const { category, itemId } = useParams();
@@ -160,7 +161,7 @@ export const ProductDetailsPage = () => {
       <Breadcrumbs category={product?.category || ''} product={product?.name} />
       <div className="back">
         <div className="back__arrow"></div>
-        <button className="back__btn" onClick={() => navigate(`/${category}`)}>
+        <button className="back__btn" onClick={() => navigate(-1)}>
           Back
         </button>
       </div>
@@ -194,7 +195,7 @@ export const ProductDetailsPage = () => {
                     <div
                       className={`product-details__color-select ${color === selectedColor ? 'product-details__color-select--selected' : ''}`}
                       key={color}
-                      style={{ backgroundColor: color }}
+                      style={{ backgroundColor: colorMapping[color] || color }}
                       onClick={() => {
                         setSelectedColor(color);
                       }}
