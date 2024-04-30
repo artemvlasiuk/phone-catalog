@@ -74,33 +74,6 @@ export const ProductDetailsPage = () => {
     }
   };
 
-  /* const handleSwitchProduct = () => {
-    if (selectedColor && selectedCapacity) {
-      const itemIdParts = itemId?.split('-');
-
-      if (!itemIdParts) {
-        return;
-      }
-
-      itemIdParts[itemIdParts.length - 2] = selectedCapacity;
-      itemIdParts[itemIdParts.length - 1] = selectedColor;
-
-      const newProductId = itemIdParts.join('-');
-
-      console.log(newProductId);
-
-      if (newProductId !== undefined) {
-        if (!category) {
-          return;
-        }
-
-        findProductByItemId(newProductId, category).then(switchedProduct =>
-          setProduct(switchedProduct),
-        );
-      }
-    }
-  }; */
-
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
