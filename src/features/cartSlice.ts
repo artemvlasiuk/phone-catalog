@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Product } from '../types/Product';
+import { saveState } from './utils';
 
 export interface CartState {
   cart: Product[];
@@ -13,11 +14,23 @@ const initialCart = localStorage.getItem('cart')
   ? JSON.parse(localStorage.getItem('cart') as string)
   : [];
 
+const initialTotalInCart = localStorage.getItem('totalInCart')
+  ? JSON.parse(localStorage.getItem('totalInCart') as string)
+  : 0;
+
+const initialTotalPrice = localStorage.getItem('totalPrice')
+  ? JSON.parse(localStorage.getItem('totalPrice') as string)
+  : 0;
+
+const initialQuantities = localStorage.getItem('quantities')
+  ? JSON.parse(localStorage.getItem('quantities') as string)
+  : {};
+
 const initialState: CartState = {
   cart: initialCart,
-  totalInCart: 0,
-  totalPrice: 0,
-  quantities: {},
+  totalInCart: initialTotalInCart,
+  totalPrice: initialTotalPrice,
+  quantities: initialQuantities,
 };
 
 const cartSlice = createSlice({
@@ -38,7 +51,7 @@ const cartSlice = createSlice({
 
       state.totalInCart += 1;
       state.totalPrice += action.payload.price;
-      localStorage.setItem('cart', JSON.stringify(state.cart));
+      saveState(state);
     },
     removeFromCart: (state, action: PayloadAction<Product['itemId']>) => {
       const index = state.cart.findIndex(
@@ -52,7 +65,7 @@ const cartSlice = createSlice({
         delete state.quantities[state.cart[index].itemId];
         state.cart.splice(index, 1);
         state.totalInCart -= quantity;
-        localStorage.setItem('cart', JSON.stringify(state.cart));
+        saveState(state);
       }
     },
     increaseQuantity: (state, action: PayloadAction<Product['itemId']>) => {
@@ -68,7 +81,7 @@ const cartSlice = createSlice({
         }
       }
 
-      localStorage.setItem('cart', JSON.stringify(state.cart));
+      saveState(state);
     },
     decreaseQuantity: (state, action: PayloadAction<Product['itemId']>) => {
       if (
@@ -86,14 +99,14 @@ const cartSlice = createSlice({
         }
       }
 
-      localStorage.setItem('cart', JSON.stringify(state.cart));
+      saveState(state);
     },
     clearCart: state => {
       state.cart = [];
       state.totalInCart = 0;
       state.totalPrice = 0;
       state.quantities = {};
-      localStorage.setItem('cart', JSON.stringify(state.cart));
+      saveState(state);
     },
   },
 });
