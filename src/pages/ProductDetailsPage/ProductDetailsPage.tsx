@@ -1,6 +1,6 @@
 import './ProductDetailsPage.scss';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   findProductByItemId,
   getAllProducts,
@@ -75,29 +75,6 @@ export const ProductDetailsPage = () => {
     }
   };
 
-  const handleSwitchProduct = useCallback(() => {
-    if (selectedColor && selectedCapacity) {
-      const itemIdParts = itemId?.split('-');
-
-      if (!itemIdParts) {
-        return;
-      }
-
-      itemIdParts[itemIdParts.length - 2] = selectedCapacity.toLowerCase();
-      itemIdParts[itemIdParts.length - 1] = selectedColor;
-
-      const newProductId = itemIdParts.join('-');
-
-      if (newProductId !== undefined) {
-        if (!category) {
-          return;
-        }
-
-        navigate(`/${category}/${newProductId}`);
-      }
-    }
-  }, [selectedColor, selectedCapacity, itemId, category, navigate]);
-
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
@@ -114,8 +91,24 @@ export const ProductDetailsPage = () => {
   }, [itemId, category]);
 
   useEffect(() => {
-    handleSwitchProduct();
-  }, [selectedColor, selectedCapacity, handleSwitchProduct]);
+    const fetchNewProduct = async () => {
+      setIsLoading(true);
+      if (category && product) {
+        const newItemId = `${product?.namespaceId}-${selectedCapacity?.toLowerCase()}-${selectedColor?.replace(/\s/g, '-')}`;
+        const newCurrentProduct = await findProductByItemId(
+          newItemId,
+          category,
+        );
+
+        setProduct(newCurrentProduct);
+        navigate(`/${category}/${newItemId}`, { replace: true });
+        setIsLoading(false);
+      }
+    };
+
+    fetchNewProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCapacity, selectedColor]);
 
   useEffect(() => {
     if (product) {
@@ -229,10 +222,10 @@ export const ProductDetailsPage = () => {
             <div className="product-details__divider"></div>
             <div className="product-details__price">
               <div className="product-details__price--regular">
-                ${product?.priceRegular}
+                ${product?.priceDiscount}
               </div>
               <div className="product-details__price--discount">
-                ${product?.priceDiscount}
+                ${product?.priceRegular}
               </div>
             </div>
             <div className="product-details__buttons">

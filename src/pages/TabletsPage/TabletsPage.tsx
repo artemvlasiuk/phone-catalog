@@ -39,7 +39,7 @@ export const TabletsPage = () => {
           <AddButton text="Reload" onClick={fetchTablets} />
         </div>
       ) : tablets.length === 0 ? (
-        <div className="page__title">There are no phones yet</div>
+        <div className="page__title">There are no tablets yet</div>
       ) : (
         <ProductsList products={tablets} category="Tablets" />
       )}
